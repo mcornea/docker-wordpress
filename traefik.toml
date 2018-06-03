@@ -1,0 +1,17 @@
+debug = false
+checkNewVersion = true
+logLevel = "ERROR"
+
+[web]
+address = ":8080"
+  [web.auth.basic]
+  users = ["admin:xxx"]
+[entryPoints]
+  [entryPoints.http]
+  address = ":80"
+
+# Enable more detailed statistics.
+[web.statistics]
+# Number of recent errors logged.
+recentErrors = 10
+
