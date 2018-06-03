@@ -1,0 +1,43 @@
+# create db network
+docker network create internal
+
+## create persistent storage directory
+mkdir -p /storage/{db,www}
+
+## traefik
+docker run -d \
+  --restart always \
+  -v /var/run/docker.sock:/var/run/docker.sock \
+  -v $PWD/traefik.toml:/traefik.toml \
+  -p 80:80 \
+  -l traefik.frontend.rule=Host:lb01.remote-lab.net \
+  -l traefik.port=8080 \
+  --network internal \
+  --name traefik \
+  traefik:latest --docker
+
+## mariadb
+docker run --name mariadb --restart always -e MYSQL_ROOT_PASSWORD=$(openssl rand -hex 10) -v /storage/db:/var/lib/mysql --network internal -d mariadb:latest
+
+## wordpress01
+docker run --name vidomaintenance.ca \
+  --restart always \
+  --label="traefik.backend=vidomaintenance.ca" \
+  --label="traefik.frontend.rule=Host:vidomaintenance.ca" \
+  --label="traefik.docker.network=proxy" \
+  --label="traefik.port=80" \
+  --network internal \
+  --link mariadb:db \
+  -v /storage/www/vidomaintenance.ca:/var/www/html \
+  -d wordpress:latest
+
+docker run --name mydailybag.com \
+  --restart always \
+  --label="traefik.backend=mydailybag.com" \
+  --label="traefik.frontend.rule=Host:mydailybag.com" \
+  --label="traefik.docker.network=proxy" \
+  --label="traefik.port=80" \
+  --network internal \
+  --link mariadb:db \
+  -v /storage/www/mydailybag.com:/var/www/html \
+  -d wordpress:latest
