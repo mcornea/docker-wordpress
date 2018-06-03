@@ -11,8 +11,11 @@ docker run -d \
   -v $PWD/traefik.toml:/traefik.toml \
   -p 80:80 \
   -l traefik.frontend.rule=Host:lb01.remote-lab.net \
+<<<<<<< HEAD
   -l traefik.frontend.redirect.regex='^http://lb01.remote-lab.net/(.*)' \
   -l traefik.frontend.redirect.replacement='https://lb01.remote-lab.net/$1' \
+=======
+>>>>>>> 6e27c731d0f5b089b431be8af6b536d057edc9af
   -l traefik.port=8080 \
   --network internal \
   --name traefik \
@@ -25,7 +28,11 @@ docker run --name mariadb --restart always -e MYSQL_ROOT_PASSWORD=$(openssl rand
 docker run --name vidomaintenance.ca \
   --restart always \
   --label="traefik.backend=vidomaintenance.ca" \
+<<<<<<< HEAD
   --label="traefik.frontend.rule=Host:vidomaintenance.ca,www.vidomaintenance.ca" \
+=======
+  --label="traefik.frontend.rule=Host:vidomaintenance.ca" \
+>>>>>>> 6e27c731d0f5b089b431be8af6b536d057edc9af
   --label="traefik.docker.network=proxy" \
   --label="traefik.port=80" \
   --network internal \
@@ -36,7 +43,11 @@ docker run --name vidomaintenance.ca \
 docker run --name mydailybag.com \
   --restart always \
   --label="traefik.backend=mydailybag.com" \
+<<<<<<< HEAD
   --label="traefik.frontend.rule=Host:mydailybag.com,www.mydailybag.com" \
+=======
+  --label="traefik.frontend.rule=Host:mydailybag.com" \
+>>>>>>> 6e27c731d0f5b089b431be8af6b536d057edc9af
   --label="traefik.docker.network=proxy" \
   --label="traefik.port=80" \
   --network internal \
